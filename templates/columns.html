@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Columns Information</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  </head>
+  <body class="container py-5">
+    <h1 class="mb-4">Column Types</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Numerical Columns</h2>
+        <table class="table table-striped mb-4">
+          <thead>
+            <tr>
+              <th scope="col">Feature Name</th>
+              <th scope="col">Null Values</th>
+              <th scope="col">Unique Values</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for col in num_cols %}
+            <tr>
+              <td>{{ col }}</td>
+              <td>{{ null_values[col] }}</td>
+              <td>{{ unique_values[col] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-md-6">
+        <h2>Categorical Columns</h2>
+        <table class="table table-striped mb-4">
+          <thead>
+            <tr>
+              <th scope="col">Feature Name</th>
+              <th scope="col">Null Values</th>
+              <th scope="col">Unique Values</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for col in cat_cols %}
+            <tr>
+              <td>{{ col }}</td>
+              <td>{{ null_values[col] }}</td>
+              <td>{{ unique_values[col] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Form for selecting processing options-->
+    <form
+      action="{{ url_for('process_data', filename=filename, target=target, test_file_path=test_file_path) }}"
+      method="post"
+      class="mb-4"
+    >
+      <h3>Preprocessing Options</h3>
+
+      <div class="mb-3">
+        <label for="null_handling" class="form-label">Handle Null Values:</label>
+        <select name="null_handling" id="null_handling" class="form-select">
+          <option value="drop">Drop Rows</option>
+          <option value="mean">Fill with Mean (for numerical)</option>
+          <option value="median">Fill with Median (for numerical)</option>
+          <option value="constant">Fill with a Constant (specify below)</option>
+        </select>
+        <input type="text" name="null_constant" placeholder="Constant Value" class="form-control mt-2" />
+      </div>
+
+      <div class="mb-3">
+        <label for="scaling" class="form-label">Scaling:</label>
+        <select name="scaling" id="scaling" class="form-select">
+          <option value="none">None</option>
+          <option value="standard">Standard Scaling</option>
+          <option value="minmax">Min-Max Scaling</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="null_handling_categorical" class="form-label">Handle Null Values in Categorical Features:</label>
+        <select name="null_handling_categorical" id="null_handling_categorical" class="form-select">
+          <option value="drop">Drop Rows</option>
+          <option value="mode">Fill with Mode</option>
+          <option value="constant">Fill with a Constant (specify below)</option>
+        </select>
+        <input type="text" name="null_categorical_constant" placeholder="Constant Value for Categorical" class="form-control mt-2" />
+      </div>
+
+      <div class="mb-3">
+        <label for="categorical_handling" class="form-label">Handle Categorical Features:</label>
+        <select name="categorical_handling" id="categorical_handling" class="form-select">
+          <option value="onehot">One-Hot Encoding</option>
+          <option value="label">Label Encoding</option>
+        </select>
+      </div>
+
+      <input type="submit" value="Next" class="btn btn-primary" />
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
